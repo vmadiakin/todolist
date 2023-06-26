@@ -1,0 +1,37 @@
+version: '3.9'
+services:
+  front:
+    image: vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    ports:
+      - '80:80'
+    volumes:
+      - ./frontend/docker/nginx.conf:/etc/nginx/conf.d/default.conf
+  api:
+    image: vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    ports:
+      - '8080:8080'
+    depends_on:
+      pg:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+  migrations:
+    image: vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    depends_on:
+      pg:
+        condition: service_healthy
+    command: >
+      bash -c "python manage.py makemigrations && python manage.py migrate"
+  pg:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: $DB_NAME
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
