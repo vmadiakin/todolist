@@ -15,8 +15,6 @@ services:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
-    volumes:
-      - ./.env:/.env
 
   migrations:
     image: vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
@@ -25,8 +23,6 @@ services:
         condition: service_healthy
     command: >
       bash -c "python manage.py makemigrations && python manage.py migrate"
-    volumes:
-      - ./.env:/.env
 
   pg:
     image: postgres:latest
