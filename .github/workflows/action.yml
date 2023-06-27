@@ -32,15 +32,15 @@ jobs:
       - name: render config
         run: |
           mkdir skypro
-          cat docker-compose-ci.yaml | envsubst > docker-compose.yaml
-          cat .env | envsubst > .env
+          envsubst < docker-compose-ci.yaml > docker-compose.yaml
+          envsubst < .env > .env
       - name: clone files to server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "docker-compose.yaml, .env"
+          source: "docker-compose.yaml,.env"
           target: "todolist_app"
           strip-components: 1
       - name: run docker-compose
