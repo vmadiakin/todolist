@@ -18,7 +18,9 @@ jobs:
         uses: actions/checkout@v2
       - name: render .env
         run: |
-          sed -e 's/\${\(.*\)}/\$\1/g' .env | envsubst > .env
+          cp .env .env.temp
+          sed -e 's/\${\(.*\)}/\$\1/g' .env.temp | envsubst > .env
+          rm .env.temp
       - name: print files
         run: ls -la
       - name: docker build
