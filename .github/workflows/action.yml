@@ -55,10 +55,10 @@ jobs:
           strip-components: 1
 
       - name: Copy .env file to api container
-        run: docker cp .env todolist_app/api:.env
+        run: docker cp ${{ github.workspace }}/.env todolist_app/api:.env
 
       - name: Copy .env file to migrations container
-        run: docker cp .env todolist_app/migrations:.env
+        run: docker cp ${{ github.workspace }}/.env todolist_app/migrations:.env
 
       - name: run docker-compose
         uses: appleboy/ssh-action@master
