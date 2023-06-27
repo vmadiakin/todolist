@@ -40,7 +40,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "docker-compose.yaml,.env"
+          source: "docker-compose.yaml, .env"
           target: "todolist_app"
           strip-components: 1
       - name: run docker-compose
