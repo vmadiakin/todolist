@@ -4,9 +4,22 @@ on: [push]
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
+    env:
+      ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DEBUG: ${{ secrets.DEBUG }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
     steps:
       - name: clone code
         uses: actions/checkout@v2
+      - name: render .env
+        run: cat .env | envsubst > .env
+      - name: print files
+        run: ls -la
       - name: docker build
         run: docker build -t vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
       - name: docker login
@@ -32,15 +45,14 @@ jobs:
       - name: render config
         run: |
           mkdir skypro
-          envsubst < docker-compose-ci.yaml > docker-compose.yaml
-          envsubst < .env > .env
+          cat docker-compose-ci.yaml | envsubst > docker-compose.yaml
       - name: clone files to server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "docker-compose.yaml,.env"
+          source: "docker-compose.yaml"
           target: "todolist_app"
           strip-components: 1
       - name: run docker-compose
