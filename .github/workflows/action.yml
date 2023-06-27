@@ -33,7 +33,7 @@ jobs:
         run: |
           mkdir skypro
           cat docker-compose-ci.yaml | envsubst > docker-compose.yaml
-          сat .env | envsubst > .env
+          cat .env | envsubst > .env
       - name: clone files to server
         uses: appleboy/scp-action@master
         with:
