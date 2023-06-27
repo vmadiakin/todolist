@@ -17,7 +17,8 @@ jobs:
       - name: clone code
         uses: actions/checkout@v2
       - name: render .env
-        run: cat .env | envsubst > .env
+        run: |
+          sed -e 's/\${\(.*\)}/\$\1/g' .env | envsubst > .env
       - name: print files
         run: ls -la
       - name: docker build
