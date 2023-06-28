@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v2
       - name: render .env
         run: |
-          cp .env .env.temp
+          cp .env.example .env.temp
           sed -e 's/\${\(.*\)}/\$\1/g' .env.temp | envsubst > .env
           rm .env.temp
       - name: print files
