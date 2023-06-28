@@ -24,7 +24,7 @@ RUN poetry config virtualenvs.create false \
 COPY . /app
 
 # Открываем порт, на котором будет работать ваш бэкенд
-EXPOSE 8080
+EXPOSE 8000
 
 # Запускаем команду, которая будет запускать ваше приложение при старте контейнера
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]

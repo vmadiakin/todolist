@@ -11,7 +11,7 @@ services:
     image: vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     container_name: api
     ports:
-      - '8000:8000'
+      - '8080:8080'
     depends_on:
       pg:
         condition: service_healthy
