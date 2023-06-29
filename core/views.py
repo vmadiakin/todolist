@@ -1,11 +1,13 @@
 from django.contrib.auth import authenticate, login
-from django.core.exceptions import ValidationError
-from django.views.decorators.csrf import ensure_csrf_cookie
-from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth.models import User
+from rest_framework import serializers
+from rest_framework.permissions import IsAuthenticated
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
+from .models import User
 from .serializers import UserRegistrationSerializer, UserSerializer
 
 
@@ -27,31 +29,13 @@ class UserLoginView(APIView):
             return Response({'error': 'Invalid username or password.'}, status=401)
 
 
-class UserProfileView(RetrieveUpdateAPIView):
+class UserRetrieveUpdateView(RetrieveUpdateAPIView):
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
-
-    @ensure_csrf_cookie
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         return self.request.user
 
-    def get(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        try:
-            self.perform_update(serializer)
-        except ValidationError as e:
-            if 'username' in e.message_dict:
-                return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-            raise
-        return Response(serializer.data)
+    @method_decorator(ensure_csrf_cookie)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)

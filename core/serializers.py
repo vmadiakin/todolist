@@ -46,4 +46,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'email')
+        fields = ['id', 'username', 'first_name', 'last_name', 'email']
+
+    def update(self, instance, validated_data):
+        username = validated_data.get('username', instance.username)
+        if User.objects.filter(username=username).exclude(pk=instance.pk).exists():
+            raise serializers.ValidationError("Username already exists.")
+        return super().update(instance, validated_data)
