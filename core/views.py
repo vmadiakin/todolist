@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ValidationError
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -31,7 +31,7 @@ class UserProfileView(RetrieveUpdateAPIView):
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 
-    @csrf_protect
+    @ensure_csrf_cookie
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -52,6 +52,6 @@ class UserProfileView(RetrieveUpdateAPIView):
             self.perform_update(serializer)
         except ValidationError as e:
             if 'username' in e.message_dict:
-                return Response({'error': 'Пользователь с таким именем уже существует.'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
             raise
         return Response(serializer.data)
