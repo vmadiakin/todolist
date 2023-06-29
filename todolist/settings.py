@@ -41,6 +41,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 MY_APPS = [
     'core',
     'rest_framework',
+    'drf_yasg',
 ]
 
 INSTALLED_APPS = [
