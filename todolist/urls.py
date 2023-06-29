@@ -22,10 +22,10 @@ from rest_framework import permissions
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="API Documentation",
+        title="Your API",
         default_version='v1',
-        description="Your API description",
-        terms_of_service="https://www.example.com/policies/terms/",
+        description="Description of your API",
+        terms_of_service="https://www.example.com/terms/",
         contact=openapi.Contact(email="contact@example.com"),
         license=openapi.License(name="BSD License"),
     ),
