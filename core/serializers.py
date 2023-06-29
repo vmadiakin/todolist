@@ -53,3 +53,31 @@ class UserSerializer(serializers.ModelSerializer):
         if User.objects.filter(username=username).exclude(pk=instance.pk).exists():
             raise serializers.ValidationError("Username already exists.")
         return super().update(instance, validated_data)
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate(self, data):
+        old_password = data.get('old_password')
+        new_password = data.get('new_password')
+
+        user = self.context['request'].user
+
+        if not user.check_password(old_password):
+            raise serializers.ValidationError("Неправильный текущий пароль.")
+
+        try:
+            validate_password(new_password, user=user)
+        except serializers.ValidationError as e:
+            raise serializers.ValidationError(str(e))
+
+        return data
+
+    def update(self, instance, validated_data):
+        new_password = validated_data.get('new_password')
+        instance.set_password(new_password)
+        instance.save()
+        return instance
+
