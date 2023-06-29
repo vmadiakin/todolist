@@ -1,7 +1,8 @@
 version: '3.9'
 services:
   front:
-    image: sermalenk/skypro-front:lesson-34
+    image: sermalenk/skypro-front:lesson-35
+    container_name: front
     restart: always
     depends_on:
       - api
