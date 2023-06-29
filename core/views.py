@@ -1,5 +1,5 @@
-from django.contrib.auth import authenticate, login
-from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
+from django.contrib.auth import authenticate, login, logout
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
@@ -29,7 +29,7 @@ class UserLoginView(APIView):
             return Response({'error': 'Invalid username or password.'}, status=401)
 
 
-class UserRetrieveUpdateView(RetrieveUpdateAPIView):
+class UserRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 
@@ -39,3 +39,7 @@ class UserRetrieveUpdateView(RetrieveUpdateAPIView):
     @method_decorator(ensure_csrf_cookie)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        logout(request)
+        return self.destroy(request, *args, **kwargs)
