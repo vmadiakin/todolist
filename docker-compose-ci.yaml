@@ -1,12 +1,12 @@
 version: '3.9'
 services:
   front:
-    image: vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-    container_name: front
+    image: sermalenk/skypro-front:lesson-34
+    restart: always
+    depends_on:
+      - api
     ports:
-      - '80:80'
-    volumes:
-      - ./frontend/docker/nginx.conf:/etc/nginx/conf.d/default.conf
+      - "80:80"
   api:
     image: vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     container_name: api
