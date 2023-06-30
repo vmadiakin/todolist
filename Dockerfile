@@ -13,7 +13,9 @@ COPY poetry.lock pyproject.toml /app/
 
 WORKDIR /app
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi
+    && poetry install --no-interaction --no-ansi \
+
+RUN python manage.py collectstatic --noinput
 
 COPY . /app
 
