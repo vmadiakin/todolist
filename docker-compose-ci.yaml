@@ -8,6 +8,8 @@ services:
       - api
     ports:
       - "80:80"
+    volumes:
+      - ./static:/app/static
 
 
   api:
