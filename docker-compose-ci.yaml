@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   front:
-    image: sermalenk/skypro-front:lesson-35
+    image: vitaliimadiakin/todolist:front
     container_name: front
     restart: always
     depends_on:
