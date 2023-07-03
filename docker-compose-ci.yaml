@@ -8,6 +8,8 @@ services:
       - api
     ports:
       - "80:80"
+    volumes:
+      - ./frontend/docker/:/etc/nginx/
 
   api:
     image: vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
