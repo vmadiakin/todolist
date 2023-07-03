@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   front:
-    image: vitaliimadiakin/todolist:front
+    image: sermalenk/skypro-front:lesson-35
     container_name: front
     restart: always
     depends_on:
@@ -9,7 +9,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./static:/app/static
+      - ./static:/usr/share/nginx/html/static
 
 
   api:
