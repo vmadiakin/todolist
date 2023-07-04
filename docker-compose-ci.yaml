@@ -16,7 +16,9 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
 
   collect_static:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     env_file: .env
     command: python manage.py collectstatic -c --no-input
     volumes:
