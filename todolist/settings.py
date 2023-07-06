@@ -42,6 +42,7 @@ MY_APPS = [
     'core',
     'rest_framework',
     'drf_yasg',
+    'social_django',
 ]
 
 INSTALLED_APPS = [
@@ -59,6 +60,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -97,6 +99,8 @@ DATABASES = {
         'PORT': env('DB_PORT'),
     }
 }
+
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -141,3 +145,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.User'
 
 APPEND_SLASH = False
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.vk.VKOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = env('VK_OAUTH2_KEY')
+SOCIAL_AUTH_VK_OAUTH2_SECRET = env('VK_OAUTH2_SECRET')
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/logged-in/'
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/login-error/'
