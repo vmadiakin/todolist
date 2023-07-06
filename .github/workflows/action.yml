@@ -13,8 +13,8 @@ jobs:
       DB_USER: ${{ secrets.DB_USER }}
       DEBUG: ${{ secrets.DEBUG }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      VK_OAUTH2_KEY: ${{ VK_OAUTH2_KEY }}
-      VK_OAUTH2_SECRET: ${{ VK_OAUTH2_SECRET }}
+      VK_OAUTH2_KEY: ${{ secrets.VK_OAUTH2_KEY }}
+      VK_OAUTH2_SECRET: ${{ secrets.VK_OAUTH2_SECRET }}
     steps:
       - name: clone code
         uses: actions/checkout@v2
@@ -44,8 +44,8 @@ jobs:
       DB_USER: ${{ secrets.DB_USER }}
       DEBUG: ${{ secrets.DEBUG }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      VK_OAUTH2_KEY: ${{ VK_OAUTH2_KEY }}
-      VK_OAUTH2_SECRET: ${{ VK_OAUTH2_SECRET }}
+      VK_OAUTH2_KEY: ${{ secrets.VK_OAUTH2_KEY }}
+      VK_OAUTH2_SECRET: ${{ secrets.VK_OAUTH2_SECRET }}
     steps:
       - name: clone code
         uses: actions/checkout@v2
