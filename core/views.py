@@ -1,13 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
-from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
+from django.shortcuts import redirect
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.contrib.auth.models import User
-from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
-from .models import User
 from .serializers import UserRegistrationSerializer, UserSerializer, ChangePasswordSerializer
 
 
@@ -42,7 +40,7 @@ class UserRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         logout(request)
-        return self.destroy(request, *args, **kwargs)
+        return redirect('user-login')
 
 
 class ChangePasswordView(UpdateAPIView):
