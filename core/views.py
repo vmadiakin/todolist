@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import redirect
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -40,7 +39,7 @@ class UserRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         logout(request)
-        return redirect('user-login')
+        return self.destroy(request, *args, **kwargs)
 
 
 class ChangePasswordView(UpdateAPIView):
