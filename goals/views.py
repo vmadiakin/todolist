@@ -44,3 +44,4 @@ class GoalCategoryView(RetrieveUpdateDestroyAPIView):
         instance.is_deleted = True
         instance.save()
         return instance
+
