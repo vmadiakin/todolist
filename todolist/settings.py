@@ -43,6 +43,7 @@ MY_APPS = [
     'rest_framework',
     'drf_yasg',
     'social_django',
+    'goals',
 ]
 
 INSTALLED_APPS = [
@@ -155,3 +156,7 @@ SOCIAL_AUTH_VK_OAUTH2_KEY = env('VK_OAUTH2_KEY')
 SOCIAL_AUTH_VK_OAUTH2_SECRET = env('VK_OAUTH2_SECRET')
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/logged-in/'
 SOCIAL_AUTH_LOGIN_ERROR_URL = '/login-error/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
+}
