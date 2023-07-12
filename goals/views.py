@@ -72,7 +72,7 @@ class GoalUpdateView(generics.UpdateAPIView):
     lookup_field = 'id'
 
 
-class GoalPartialUpdateView(generics.PartialUpdateAPIView):
+class GoalPartialUpdateView(generics.RetrieveUpdateAPIView):
     queryset = Goal.objects.all()
     serializer_class = GoalSerializer
     lookup_field = 'id'
