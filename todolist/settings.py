@@ -44,6 +44,7 @@ MY_APPS = [
     'drf_yasg',
     'social_django',
     'goals',
+    'django_filters',
 ]
 
 INSTALLED_APPS = [

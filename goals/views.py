@@ -1,10 +1,12 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework import permissions, filters
+from rest_framework import permissions, filters, generics
 from rest_framework.pagination import LimitOffsetPagination
 
 from core.serializers import UserSerializer
-from goals.models import GoalCategory
-from goals.serializers import GoalCategorySerializer
+from filters.filters import GoalDateFilter
+from goals.models import GoalCategory, Goal
+from goals.serializers import GoalCategorySerializer, GoalSerializer
 
 
 class GoalCategoryCreateView(CreateAPIView):
@@ -44,3 +46,39 @@ class GoalCategoryView(RetrieveUpdateDestroyAPIView):
         instance.is_deleted = True
         instance.save()
         return instance
+
+
+class GoalCreateView(generics.CreateAPIView):
+    queryset = Goal.objects.all()
+    serializer_class = GoalSerializer
+
+
+class GoalListView(ListAPIView):
+    queryset = Goal.objects.all()
+    serializer_class = GoalSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = GoalDateFilter
+
+
+class GoalReadView(generics.RetrieveAPIView):
+    queryset = Goal.objects.all()
+    serializer_class = GoalSerializer
+    lookup_field = 'id'
+
+
+class GoalUpdateView(generics.UpdateAPIView):
+    queryset = Goal.objects.all()
+    serializer_class = GoalSerializer
+    lookup_field = 'id'
+
+
+class GoalPartialUpdateView(generics.PartialUpdateAPIView):
+    queryset = Goal.objects.all()
+    serializer_class = GoalSerializer
+    lookup_field = 'id'
+
+
+class GoalDeleteView(generics.DestroyAPIView):
+    queryset = Goal.objects.all()
+    serializer_class = GoalSerializer
+    lookup_field = 'id'
