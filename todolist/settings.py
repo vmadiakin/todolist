@@ -102,7 +102,6 @@ DATABASES = {
     }
 }
 
-SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -155,8 +154,12 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_VK_OAUTH2_KEY = env('VK_OAUTH2_KEY')
 SOCIAL_AUTH_VK_OAUTH2_SECRET = env('VK_OAUTH2_SECRET')
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/logged-in/'
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/categories'
 SOCIAL_AUTH_LOGIN_ERROR_URL = '/login-error/'
+SOCIAL_AUTH_USER_MODEL = 'core.User'
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+SOCIAL_AUTH_VK_SCOPE = ['email']
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
