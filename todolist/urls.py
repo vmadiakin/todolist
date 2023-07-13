@@ -41,5 +41,5 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('core/', include('core.urls')),
     path("goals/", include("goals.urls")),
-    path('oauth', include('social_django.urls', namespace='social')),
+    path('api/oauth/', include('social_django.urls', namespace='social')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
