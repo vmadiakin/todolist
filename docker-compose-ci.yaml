@@ -8,20 +8,6 @@ services:
       - "80:80"
     volumes:
       - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
-#  front:
-#    image: sermalenk/skypro-front:lesson-36
-#    container_name: front
-#    restart: on-failure
-#    depends_on:
-#      api:
-#        condition: service_started
-#      collect_static:
-#        condition: service_completed_successfully
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - ./django_static:/usr/share/nginx/html/static
-#      - ./nginx.conf:/etc/nginx/conf.d/default.conf
 
   collect_static:
     image: vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
