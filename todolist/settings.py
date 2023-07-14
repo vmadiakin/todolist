@@ -145,7 +145,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'core.User'
 
-APPEND_SLASH = False
+APPEND_SLASH = True
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKOAuth2',
