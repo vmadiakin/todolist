@@ -2,6 +2,7 @@ version: '3.9'
 services:
   frontend:
     image: sermalenk/skypro-front:lesson-35
+    container_name: front
     restart: always
     ports:
       - "80:80"
