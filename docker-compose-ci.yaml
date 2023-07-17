@@ -21,7 +21,7 @@ services:
     env_file: .env
     command: python manage.py collectstatic -c --no-input
     volumes:
-      - ./django_static:/app/static/
+      - ./django_static:/static/
 
   api:
     image: vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
