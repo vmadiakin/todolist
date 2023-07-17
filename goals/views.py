@@ -2,17 +2,15 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import permissions, filters, generics
 from rest_framework.pagination import LimitOffsetPagination
-
-from core.serializers import UserSerializer
 from filters.filters import GoalDateFilter
 from goals.models import GoalCategory, Goal
-from goals.serializers import GoalCategorySerializer, GoalSerializer
+from goals.serializers import GoalCategorySerializer, GoalSerializer, GoalCreateSerializer
 
 
 class GoalCategoryCreateView(CreateAPIView):
     model = GoalCategory
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = UserSerializer
+    serializer_class = GoalCreateSerializer
 
 
 class GoalCategoryListView(ListAPIView):
