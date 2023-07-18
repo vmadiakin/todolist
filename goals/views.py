@@ -1,9 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import permissions, filters, generics, mixins
 from rest_framework.pagination import LimitOffsetPagination
 from filters.filters import GoalDateFilter
-from goals.models import GoalCategory, Goal
+from goals.models import GoalCategory, Goal, Status
 from goals.serializers import GoalCategorySerializer, GoalSerializer, GoalCreateSerializer
 
 
@@ -43,25 +44,42 @@ class GoalCategoryView(RetrieveUpdateDestroyAPIView):
     def perform_destroy(self, instance):
         instance.is_deleted = True
         instance.save()
+
+        # Обновление статуса всех целей связанных с удаленной категорией
+        goals = instance.goals.all()
+        for goal in goals:
+            goal.status = Status.ARCHIVED
+            goal.save()
+
         return instance
 
 
 class GoalCreateView(generics.CreateAPIView):
     queryset = Goal.objects.all()
     serializer_class = GoalSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
-class GoalListView(ListAPIView):
+class GoalListView(generics.ListAPIView):
     queryset = Goal.objects.all()
     serializer_class = GoalSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = GoalDateFilter
+    search_fields = ['title']
+    ordering_fields = ['title', 'created']
+    pagination_class = LimitOffsetPagination
+    permission_classes = [permissions.IsAuthenticated]
 
 
-class GoalAPIView(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+class GoalAPIView(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                  mixins.DestroyModelMixin):
     queryset = Goal.objects.all()
     serializer_class = GoalSerializer
     lookup_field = 'pk'
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
