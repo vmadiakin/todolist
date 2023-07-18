@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.middleware.csrf import get_token
 from rest_framework import permissions
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
 from rest_framework.response import Response
@@ -48,7 +49,9 @@ class UserRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
 
     @method_decorator(ensure_csrf_cookie)
     def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+        response = super().dispatch(*args, **kwargs)
+        response["X-CSRFToken"] = get_token(self.request)
+        return response
 
     def delete(self, request, *args, **kwargs):
         logout(request)

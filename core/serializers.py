@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
+from rest_framework.validators import UniqueValidator
 
 User = get_user_model()
 
@@ -14,12 +15,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         fields = ['first_name', 'last_name', 'username', 'email', 'password', 'password_repeat', 'role', 'birthdate']
         extra_kwargs = {
             'password': {'write_only': True},
+            'username': {'validators': [UniqueValidator(queryset=User.objects.all())]},
         }
-
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        self.user = user
-        return user
 
     def validate(self, attrs):
         password = attrs.get('password')
@@ -41,7 +38,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password')
 
         # Создание пользователя с хешированным паролем
-        user = User(**validated_data)
+        user = User.objects.create_user(**validated_data)
         user.set_password(password)
         user.save()
 
@@ -52,6 +49,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email']
+        extra_kwargs = {
+            'username': {'validators': [UniqueValidator(queryset=User.objects.all())]},
+        }
 
     def update(self, instance, validated_data):
         username = validated_data.get('username', instance.username)
