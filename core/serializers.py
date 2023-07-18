@@ -16,6 +16,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'password': {'write_only': True},
         }
 
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        self.user = user
+        return user
+
     def validate(self, attrs):
         password = attrs.get('password')
         password_repeat = attrs.pop('password_repeat', None)
@@ -80,4 +85,3 @@ class ChangePasswordSerializer(serializers.Serializer):
         instance.set_password(new_password)
         instance.save()
         return instance
-

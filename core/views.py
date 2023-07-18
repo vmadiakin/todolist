@@ -1,15 +1,28 @@
 from django.contrib.auth import authenticate, login, logout
+from rest_framework import permissions
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
+
+from .models import User
 from .serializers import UserRegistrationSerializer, UserSerializer, ChangePasswordSerializer
 
 
 class UserRegistrationView(CreateAPIView):
     serializer_class = UserRegistrationSerializer
+    model = User
+    permission_classes = [permissions.AllowAny]
+
+    def perform_create(self, serializer):
+        super().perform_create(serializer)
+        login(
+            self.request,
+            user=serializer.user,
+            backend="django.contrib.auth.backends.ModelBackend",
+        )
 
 
 class UserLoginView(APIView):
