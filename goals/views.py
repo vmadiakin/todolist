@@ -1,6 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework import permissions, filters, generics
+from rest_framework import permissions, filters, generics, mixins
 from rest_framework.pagination import LimitOffsetPagination
 from filters.filters import GoalDateFilter
 from goals.models import GoalCategory, Goal
@@ -58,25 +58,19 @@ class GoalListView(ListAPIView):
     filterset_class = GoalDateFilter
 
 
-class GoalReadView(generics.RetrieveAPIView):
+class GoalAPIView(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Goal.objects.all()
     serializer_class = GoalSerializer
-    lookup_field = 'id'
+    lookup_field = 'pk'
 
+    def get(self, request, pk):
+        return self.retrieve(request, pk=pk)
 
-class GoalUpdateView(generics.UpdateAPIView):
-    queryset = Goal.objects.all()
-    serializer_class = GoalSerializer
-    lookup_field = 'id'
+    def put(self, request, pk):
+        return self.update(request, pk=pk)
 
+    def patch(self, request, pk):
+        return self.partial_update(request, pk=pk)
 
-class GoalPartialUpdateView(generics.RetrieveUpdateAPIView):
-    queryset = Goal.objects.all()
-    serializer_class = GoalSerializer
-    lookup_field = 'id'
-
-
-class GoalDeleteView(generics.DestroyAPIView):
-    queryset = Goal.objects.all()
-    serializer_class = GoalSerializer
-    lookup_field = 'id'
+    def delete(self, request, pk):
+        return self.destroy(request, pk=pk)
