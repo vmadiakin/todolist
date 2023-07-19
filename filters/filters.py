@@ -3,10 +3,7 @@ from goals.models import Goal
 
 
 class GoalDateFilter(django_filters.FilterSet):
-    due_date = django_filters.DateFromToRangeFilter(
-        field_name="due_date",
-        lookup_expr=("gte", "lte"),
-    )
+    due_date = django_filters.DateRangeFilter(field_name="due_date")
     category = django_filters.CharFilter(lookup_expr='exact')
     status = django_filters.NumberFilter(lookup_expr='exact')
     priority = django_filters.NumberFilter(lookup_expr='exact')
