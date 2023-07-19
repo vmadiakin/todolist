@@ -76,7 +76,6 @@ class GoalListView(generics.ListAPIView):
         return Goal.objects.filter(user=self.request.user)
 
 
-
 class GoalAPIView(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                   mixins.DestroyModelMixin):
     queryset = Goal.objects.all()
