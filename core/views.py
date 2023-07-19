@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.middleware.csrf import get_token
 from rest_framework import permissions
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
@@ -53,6 +54,7 @@ class UserRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
         response["X-CSRFToken"] = get_token(self.request)
         return response
 
+    @method_decorator(login_required)
     def delete(self, request, *args, **kwargs):
         logout(request)
         return self.destroy(request, *args, **kwargs)
