@@ -64,7 +64,6 @@ class GoalCreateView(generics.CreateAPIView):
 
 
 class GoalListView(generics.ListAPIView):
-    queryset = Goal.objects.all()
     serializer_class = GoalSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = GoalDateFilter
@@ -72,6 +71,10 @@ class GoalListView(generics.ListAPIView):
     ordering_fields = ['title', 'created']
     pagination_class = LimitOffsetPagination
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Goal.objects.filter(user=self.request.user)
+
 
 
 class GoalAPIView(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
