@@ -2,8 +2,10 @@ import django_filters
 from django.db import models
 from goals.models import Goal
 
+
 class GoalDateFilter(django_filters.FilterSet):
-    due_date = django_filters.RangeFilter()  # Используем RangeFilter здесь
+    due_date = django_filters.DateFromToRangeFilter(field_name='due_date')
+    due_date_exact = django_filters.DateFilter(field_name='due_date', lookup_expr='exact')
     category = django_filters.CharFilter(lookup_expr='exact')
     status = django_filters.NumberFilter(lookup_expr='exact')
     priority = django_filters.NumberFilter(lookup_expr='exact')
@@ -11,7 +13,8 @@ class GoalDateFilter(django_filters.FilterSet):
     class Meta:
         model = Goal
         fields = {
-            "due_date": ["exact"],  # Устанавливаем только "exact"
+            'due_date': ['range'],  # Используем 'range' для фильтрации диапазона дат
+            'due_date_exact': ['exact'],  # Используем 'exact' для фильтрации конкретной даты
             "category": ["exact", "in"],
             "status": ["exact", "in"],
             "priority": ["exact", "in"],
