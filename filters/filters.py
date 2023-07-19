@@ -4,18 +4,20 @@ from goals.models import Goal
 
 
 class GoalDateFilter(django_filters.FilterSet):
-    due_date = django_filters.DateFromToRangeFilter(field_name="due_date", lookup_expr="range")
+    due_date = django_filters.DateFromToFilter()
+    category = django_filters.CharFilter(lookup_expr='exact')
+    status = django_filters.NumberFilter(lookup_expr='exact')
+    priority = django_filters.NumberFilter(lookup_expr='exact')
 
     class Meta:
         model = Goal
         fields = {
-            "due_date": ["gte", "lte"],
+            "due_date": ["lte", "gte"],
             "category": ["exact", "in"],
             "status": ["exact", "in"],
             "priority": ["exact", "in"],
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.filters["due_date"].widget.widgets[0].attrs["placeholder"] = "С"
-        self.filters["due_date"].widget.widgets[1].attrs["placeholder"] = "ДО"
+    filter_overrides = {
+        models.DateTimeField: {"filter_class": django_filters.IsoDateTimeFilter},
+    }
