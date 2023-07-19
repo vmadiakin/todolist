@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.middleware.csrf import get_token
-from rest_framework import permissions
+from rest_framework import permissions, status
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -34,11 +34,20 @@ class UserLoginView(APIView):
 
         user = authenticate(request, username=username, password=password)
 
-        if user is not None:
-            login(request, user)
-            return Response({'message': 'Logged in successfully.'})
-        else:
-            return Response({'error': 'Invalid username or password.'}, status=401)
+        if user is None:
+            return Response({'error': 'Invalid username or password.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        if not user.is_active:
+            return Response({'error': 'User account is disabled.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        login(request, user)
+
+        login_data = {
+            'username': username,
+            'password': password
+        }
+
+        return Response(login_data, status=status.HTTP_201_CREATED)
 
 
 class UserRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
