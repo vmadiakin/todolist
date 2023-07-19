@@ -54,7 +54,7 @@ class UserRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
         response["X-CSRFToken"] = get_token(self.request)
         return response
 
-    @method_decorator(login_required)
+    @method_decorator(login_required(login_url='/login/'))  # Указываем URL для перенаправления при отсутствии аутентификации
     def delete(self, request, *args, **kwargs):
         logout(request)
         return self.destroy(request, *args, **kwargs)
