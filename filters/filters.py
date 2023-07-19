@@ -2,7 +2,6 @@ import django_filters
 from django.db import models
 from goals.models import Goal
 
-
 class GoalDateFilter(django_filters.FilterSet):
     due_date__lte = django_filters.DateFilter(field_name='due_date', lookup_expr='lte')
     due_date__gte = django_filters.DateFilter(field_name='due_date', lookup_expr='gte')
@@ -13,8 +12,6 @@ class GoalDateFilter(django_filters.FilterSet):
     class Meta:
         model = Goal
         fields = {
-            "due_date__lte": ["lte"],
-            "due_date__gte": ["gte"],
             "category": ["exact", "in"],
             "status": ["exact", "in"],
             "priority": ["exact", "in"],
@@ -23,3 +20,8 @@ class GoalDateFilter(django_filters.FilterSet):
     filter_overrides = {
         models.DateTimeField: {"filter_class": django_filters.IsoDateTimeFilter},
     }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.filters['due_date__lte'].label = 'due_date__lte'
+        self.filters['due_date__gte'].label = 'due_date__gte'
