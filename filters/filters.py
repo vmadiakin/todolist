@@ -12,7 +12,7 @@ class GoalDateFilter(django_filters.FilterSet):
     class Meta:
         model = Goal
         fields = {
-            "due_date": ["lte", "gte"],
+            "due_date": ["gte", "lte"],
             "category": ["exact", "in"],
             "status": ["exact", "in"],
             "priority": ["exact", "in"],
