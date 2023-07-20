@@ -23,6 +23,8 @@ class GoalCategorySerializer(serializers.ModelSerializer):
 
 
 class GoalSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
     class Meta:
         model = Goal
         fields = '__all__'
