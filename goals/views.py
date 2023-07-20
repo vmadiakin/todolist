@@ -59,6 +59,9 @@ class GoalCreateView(CreateAPIView):
     serializer_class = GoalSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class GoalListView(ListAPIView):
     serializer_class = GoalSerializer
