@@ -71,6 +71,7 @@ class GoalListView(generics.ListAPIView):
     ordering_fields = ['title', 'created']
     pagination_class = LimitOffsetPagination
     permission_classes = [permissions.IsAuthenticated]
+    ordering = ['title', 'created']
 
     def get_queryset(self):
         return Goal.objects.filter(user=self.request.user)
