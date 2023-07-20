@@ -73,7 +73,8 @@ class GoalListView(ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Goal.objects.filter(user=self.request.user)
+        queryset = Goal.objects.filter(user=self.request.user)
+        return queryset
 
 
 class GoalAPIView(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
