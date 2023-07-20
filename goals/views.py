@@ -54,7 +54,7 @@ class GoalCategoryView(RetrieveUpdateDestroyAPIView):
         return instance
 
 
-class GoalCreateView(generics.CreateAPIView):
+class GoalCreateView(CreateAPIView):
     queryset = Goal.objects.all()
     serializer_class = GoalSerializer
     permission_classes = [permissions.IsAuthenticated]
