@@ -23,8 +23,6 @@ class GoalCategorySerializer(serializers.ModelSerializer):
 
 
 class GoalSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(queryset=GoalCategory.objects.all())
-
     class Meta:
         model = Goal
         fields = '__all__'
@@ -36,4 +34,4 @@ class GoalSerializer(serializers.ModelSerializer):
         if value.user != self.context["request"].user:
             raise serializers.ValidationError("Not the owner of the category")
 
-        return value.id
+        return value
