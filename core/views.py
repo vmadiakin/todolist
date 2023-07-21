@@ -19,12 +19,11 @@ class UserRegistrationView(CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
-        super().perform_create(serializer)
-        login(
-            self.request,
-            user=serializer.user,
-            backend="django.contrib.auth.backends.ModelBackend",
-        )
+        user = serializer.save()
+
+        password = serializer.validated_data['password']
+        user.set_password(password)
+        user.save()
 
 
 class UserLoginView(APIView):
