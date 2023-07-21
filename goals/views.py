@@ -1,3 +1,4 @@
+from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView
@@ -103,9 +104,7 @@ class CommentCreateView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        goal_id = self.kwargs['goal_id']  # Получить идентификатор цели из URL
-        goal = Goal.objects.get(pk=goal_id)  # Получить объект цели
-        serializer.save(user=self.request.user, goal=goal)
+        serializer.save(user=self.request.user)
 
 
 class CommentListView(generics.ListAPIView):
