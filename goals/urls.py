@@ -9,7 +9,7 @@ urlpatterns = [
     path('goal/create', views.GoalCreateView.as_view()),
     path('goal/<int:pk>', views.GoalAPIView.as_view()),
     path('goal/list', views.GoalListView.as_view()),
-    path('goal_comment/', views.CommentListView.as_view()),
-    path('goal_comment/create/', views.CommentCreateView.as_view()),
-    path('goal_comment/<int:pk>/', views.CommentAPIView.as_view()),
+    path('goal_comment/list', views.CommentListView.as_view()),
+    path('goal_comment/create', views.CommentCreateView.as_view()),
+    path('goal_comment/<int:pk>', views.CommentAPIView.as_view()),
 ]

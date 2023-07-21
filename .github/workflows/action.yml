@@ -1,5 +1,12 @@
 name: Build and deploy workflow
-on: [push]
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    branches:
+      - master
 
 jobs:
   build_and_push:
@@ -26,11 +33,11 @@ jobs:
       - name: print files
         run: ls -la
       - name: docker build
-        run: docker build -t vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
+        run: docker build -t vitaliimadiakin/todolist:$GITHUB_RUN_ID .
       - name: docker login
         run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: docker push
-        run: docker push vitaliimadiakin/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+        run: docker push vitaliimadiakin/todolist:$GITHUB_RUN_ID
 
   deploy:
     runs-on: ubuntu-latest
