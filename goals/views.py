@@ -106,7 +106,7 @@ class CommentCreateView(generics.CreateAPIView):
 
 
 class CommentListView(generics.ListAPIView):
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
     ordering_fields = ['created', 'updated']
