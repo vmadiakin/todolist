@@ -22,6 +22,9 @@ jobs:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       VK_OAUTH2_KEY: ${{ secrets.VK_OAUTH2_KEY }}
       VK_OAUTH2_SECRET: ${{ secrets.VK_OAUTH2_SECRET }}
+      COLLECT_STATIC_IMAGE: vitaliimadiakin/todolist:${{ github.ref }}-${{ github.run_id }}
+      API_IMAGE: vitaliimadiakin/todolist:${{ github.ref }}-${{ github.run_id }}
+      MIGRATIONS_IMAGE: vitaliimadiakin/todolist:${{ github.ref }}-${{ github.run_id }}
     steps:
       - name: clone code
         uses: actions/checkout@v2
