@@ -103,7 +103,9 @@ class CommentCreateView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        goal_id = self.kwargs['goal_id']  # Получить идентификатор цели из URL
+        goal = Goal.objects.get(pk=goal_id)  # Получить объект цели
+        serializer.save(user=self.request.user, goal=goal)
 
 
 class CommentListView(generics.ListAPIView):
