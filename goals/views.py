@@ -106,7 +106,9 @@ class CommentCreateView(generics.CreateAPIView):
 
 class CommentListView(generics.ListAPIView):
     serializer_class = CommentSerializer
+    ordering_fields = ['title', 'created']
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
         # Отфильтровать комментарии текущего пользователя
