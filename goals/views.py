@@ -109,11 +109,11 @@ class CommentListView(generics.ListAPIView):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['created', 'updated']  # Добавьте поля, по которым можно сортировать
+    ordering_fields = ['created', 'updated']
 
     def get_queryset(self):
-        goal_id = self.kwargs.get('goal_id')  # Получите идентификатор цели из URL-параметров
-        goal = get_object_or_404(Goal, id=goal_id, user=self.request.user)  # Получите цель или верните 404, если не найдена
+        goal_id = self.request.query_params.get('goal')  # Получите goal_id из строки запроса
+        goal = get_object_or_404(Goal, id=goal_id, user=self.request.user)
         return Comment.objects.filter(goal=goal).select_related('goal__user')
 
 
