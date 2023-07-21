@@ -106,9 +106,9 @@ class CommentCreateView(generics.CreateAPIView):
 
 
 class CommentListView(generics.ListAPIView):
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
-    filter_backends = [filters.OrderingFilter]
     ordering_fields = ['created', 'updated']
 
     def get_queryset(self):

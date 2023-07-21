@@ -40,7 +40,7 @@ class GoalSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = serializers.CharField(source='goal.user.username', read_only=True)
+    user = UserSerializer(source='goal.user.username', read_only=True)
 
     class Meta:
         model = Comment
