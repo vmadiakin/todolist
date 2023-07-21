@@ -105,6 +105,7 @@ class CommentCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         goal_id = self.request.GET.get('goal')
+        print(goal_id)
         if goal_id is not None:
             try:
                 goal = Goal.objects.get(pk=goal_id)
