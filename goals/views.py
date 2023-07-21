@@ -106,13 +106,13 @@ class CommentCreateView(generics.CreateAPIView):
 
 class CommentListView(generics.ListAPIView):
     serializer_class = CommentSerializer
-    ordering_fields = ['title', 'created']
     permission_classes = [permissions.IsAuthenticated]
-    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['created', 'updated']  # Добавьте поля, по которым можно сортировать
 
     def get_queryset(self):
-        # Отфильтровать комментарии текущего пользователя
-        return Comment.objects.filter(goal__user=self.request.user)
+        # Отфильтровать комментарии текущего пользователя и выбрать связанное имя пользователя
+        return Comment.objects.filter(goal__user=self.request.user).select_related('goal__user')
 
 
 class CommentAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin,
