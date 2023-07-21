@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from core.serializers import UserSerializer
-from goals.models import GoalCategory, Goal
+from goals.models import GoalCategory, Goal, Comment
 
 
 class GoalCreateSerializer(serializers.ModelSerializer):
@@ -37,3 +37,9 @@ class GoalSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Not the owner of the category")
 
         return value
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'

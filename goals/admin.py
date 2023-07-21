@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from goals.models import GoalCategory, Goal
+from goals.models import GoalCategory, Goal, Comment
 
 
 class GoalCategoryAdmin(admin.ModelAdmin):
@@ -10,3 +10,4 @@ class GoalCategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(GoalCategory, GoalCategoryAdmin)
 admin.site.register(Goal)
+admin.site.register(Comment)

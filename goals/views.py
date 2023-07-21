@@ -1,11 +1,11 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView
 from rest_framework import permissions, filters, generics, mixins
 from rest_framework.pagination import LimitOffsetPagination
 from filters.filters import GoalDateFilter
-from goals.models import GoalCategory, Goal, Status
-from goals.serializers import GoalCategorySerializer, GoalSerializer, GoalCreateSerializer
+from goals.models import GoalCategory, Goal, Status, Comment
+from goals.serializers import GoalCategorySerializer, GoalSerializer, GoalCreateSerializer, CommentSerializer
 
 
 class GoalCategoryCreateView(CreateAPIView):
@@ -86,6 +86,50 @@ class GoalAPIView(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
 
     def get(self, request, pk):
         return self.retrieve(request, pk=pk)
+
+    def put(self, request, pk):
+        return self.update(request, pk=pk)
+
+    def patch(self, request, pk):
+        return self.partial_update(request, pk=pk)
+
+    def delete(self, request, pk):
+        return self.destroy(request, pk=pk)
+
+
+class CommentCreateView(generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class CommentListView(generics.ListAPIView):
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Отфильтровать комментарии текущего пользователя
+        return Comment.objects.filter(goal__user=self.request.user)
+
+
+class CommentAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin,
+                     mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    lookup_field = 'pk'
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, pk=None):
+        if pk is not None:
+            return self.retrieve(request, pk=pk)
+        else:
+            return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
 
     def put(self, request, pk):
         return self.update(request, pk=pk)
