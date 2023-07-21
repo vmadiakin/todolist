@@ -16,6 +16,8 @@ jobs:
         uses: actions/checkout@v2
       - name: set docker tag
         run: echo "DOCKER_TAG=$(basename $GITHUB_REF)-${GITHUB_RUN_ID}" >> $GITHUB_ENV
+      - name: set name for collect_static
+        run: echo "COLLECT_STATIC_IMAGE=vitaliimadiakin/todolist:${{ env.DOCKER_TAG }}" >> $GITHUB_ENV
       - name: print files
         run: ls -la
       - name: docker build
