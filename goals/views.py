@@ -104,16 +104,7 @@ class CommentCreateView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        goal_id = self.request.GET.get('goal')
-        print(goal_id)
-        if goal_id is not None:
-            try:
-                goal = Goal.objects.get(pk=goal_id)
-                serializer.save(user=self.request.user, goal=goal)
-            except Goal.DoesNotExist:
-                raise Http404("Цель с указанным идентификатором не найдена.")
-        else:
-            raise Http404("Параметр 'goal' должен быть указан в запросе.")
+        serializer.save(user=self.request.user)
 
 
 class CommentListView(generics.ListAPIView):
