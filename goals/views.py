@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView
@@ -111,8 +112,9 @@ class CommentListView(generics.ListAPIView):
     ordering_fields = ['created', 'updated']  # Добавьте поля, по которым можно сортировать
 
     def get_queryset(self):
-        # Отфильтровать комментарии текущего пользователя и выбрать связанное имя пользователя
-        return Comment.objects.filter(goal__user=self.request.user).select_related('goal__user')
+        goal_id = self.kwargs.get('goal_id')  # Получите идентификатор цели из URL-параметров
+        goal = get_object_or_404(Goal, id=goal_id, user=self.request.user)  # Получите цель или верните 404, если не найдена
+        return Comment.objects.filter(goal=goal).select_related('goal__user')
 
 
 class CommentAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin,
