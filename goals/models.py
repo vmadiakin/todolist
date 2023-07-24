@@ -136,3 +136,4 @@ class Comment(DatesModelMixin):
         on_delete=models.PROTECT,
     )
     text = models.TextField(verbose_name="Текст")
+
