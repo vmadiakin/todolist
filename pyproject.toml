@@ -17,6 +17,9 @@ drf-yasg = "^1.21.6"
 social-auth-app-django = "^5.2.0"
 coreapi = "^2.3.3"
 django-filter = "^23.2"
+marshmallow = "^3.20.1"
+marshmallow-dataclass = "^8.5.14"
+requests = "^2.31.0"
 
 
 [build-system]

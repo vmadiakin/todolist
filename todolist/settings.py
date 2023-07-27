@@ -45,6 +45,7 @@ MY_APPS = [
     'social_django',
     'goals',
     'django_filters',
+    'bot',
 ]
 
 INSTALLED_APPS = [
@@ -163,3 +164,5 @@ SOCIAL_AUTH_USER_MODEL = 'core.User'
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
 }
+
+BOT_TOKEN = env("BOT_TOKEN")

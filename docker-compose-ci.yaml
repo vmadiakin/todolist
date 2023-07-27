@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   front:
-    image: sermalenk/skypro-front:lesson-37
+    image: sermalenk/skypro-front:lesson-38
     container_name: front
     restart: on-failure
     depends_on:
@@ -33,6 +33,15 @@ services:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
+
+  bot:
+    image: vitaliimadiakin/todolist:$GITHUB_RUN_ID
+    depends_on:
+      pg:
+        condition: service_healthy
+    volumes:
+      - ./.env:/app/.env
+    command: python manage.py runbot
 
   migrations:
     image: vitaliimadiakin/todolist:$GITHUB_RUN_ID
