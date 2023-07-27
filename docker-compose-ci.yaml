@@ -36,11 +36,10 @@ services:
 
   bot:
     image: vitaliimadiakin/todolist:$GITHUB_RUN_ID
+    container_name: bot
     depends_on:
       pg:
         condition: service_healthy
-    volumes:
-      - ./.env:/app/.env
     command: python manage.py runbot
 
   migrations:
