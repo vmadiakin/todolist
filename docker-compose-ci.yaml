@@ -40,6 +40,8 @@ services:
     depends_on:
       pg:
         condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
     command: python manage.py runbot
 
   migrations:
