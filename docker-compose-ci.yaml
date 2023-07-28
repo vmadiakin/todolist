@@ -38,8 +38,10 @@ services:
     image: vitaliimadiakin/todolist:$GITHUB_RUN_ID
     container_name: bot
     depends_on:
-      api:
+      pg:
         condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
     command: python manage.py runbot
 
   migrations:
