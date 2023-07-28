@@ -38,7 +38,7 @@ services:
     image: vitaliimadiakin/todolist:$GITHUB_RUN_ID
     container_name: bot
     depends_on:
-      pg:
+      api:
         condition: service_healthy
     command: python manage.py runbot
 
