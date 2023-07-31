@@ -4,7 +4,7 @@ from django.core.management import BaseCommand
 from bot.models import TgUser
 from bot.tg.client import TgClient
 from bot.tg.dc import Message
-from goals.models import Goal
+from goals.models import Goal, GoalCategory
 
 
 class Command(BaseCommand):
@@ -34,6 +34,8 @@ class Command(BaseCommand):
             return
         if "/goals" in msg.text:
             self.fetch_tasks(msg, tg_user)
+        if "/create" in msg.text:
+            self.fetch_categories(msg, tg_user)
         else:
             self.tg_client.send_message(msg.chat.id, "[Неизвестная команда]")
 
@@ -46,7 +48,7 @@ class Command(BaseCommand):
             },
         )
         if created:
-            self.tg_client.send_message(msg.chat.id, f"Приветсвую вас, {msg.from_.username}")
+            self.tg_client.send_message(msg.chat.id, f"[Приветсвую вас, {msg.from_.username}]")
 
         if tg_user.user:
             self.handle_verified_user(msg, tg_user)
@@ -61,3 +63,11 @@ class Command(BaseCommand):
             for item in res.result:
                 offset = item.update_id + 1
                 self.handle_message(item.message)
+
+    def fetch_categories(self, msg: Message, tg_user: TgUser):
+        ctgrs = GoalCategory.objects.filter(user=tg_user.user)
+        if ctgrs.count() > 0:
+            resp_msg = [f"#{item.id} {item.title}" for item in ctgrs]
+            self.tg_client.send_message(msg.chat.id, "\n".join(resp_msg))
+        else:
+            self.tg_client.send_message(msg.chat.id, "[У вас еще нет ни одной цели :(]")
