@@ -2,6 +2,8 @@ import random
 
 from django.db import models
 
+from goals.models import GoalCategory
+
 CODE_VOCABULARY = "qwertyuasdfghkzxvbnm123456789"
 
 
@@ -21,6 +23,22 @@ class TgUser(models.Model):
     )
     verification_code = models.CharField(
         max_length=32, verbose_name="код подтверждения"
+    )
+    state = models.IntegerField(
+        verbose_name="состояние пользователя",
+        default=0,
+        choices=(
+            (0, "Default"),
+            (1, "Waiting for Category"),
+            (2, "Waiting for Goal Name"),
+        ),
+    )
+    goal_category = models.ForeignKey(
+        GoalCategory,
+        models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="выбранная категория",
     )
 
     class Meta:
