@@ -18,7 +18,7 @@ class Command(BaseCommand):
         tg_user.set_verification_code()
         tg_user.save(update_fields=["verification_code"])
         self.tg_client.send_message(
-            msg.chat.id, f"[verification code] {tg_user.verification_code}"
+            msg.chat.id, f"[Код подтверждения] {tg_user.verification_code}"
         )
 
     def fetch_tasks(self, msg: Message, tg_user: TgUser):
@@ -27,7 +27,7 @@ class Command(BaseCommand):
             resp_msg = [f"#{item.id} {item.title}" for item in gls]
             self.tg_client.send_message(msg.chat.id, "\n".join(resp_msg))
         else:
-            self.tg_client.send_message(msg.chat.id, "[goals list is empty]")
+            self.tg_client.send_message(msg.chat.id, "[У вас еще нет ни одной цели :(]")
 
     def handle_verified_user(self, msg: Message, tg_user: TgUser):
         if not msg.text:
@@ -35,7 +35,7 @@ class Command(BaseCommand):
         if "/goals" in msg.text:
             self.fetch_tasks(msg, tg_user)
         else:
-            self.tg_client.send_message(msg.chat.id, "[unknown command]")
+            self.tg_client.send_message(msg.chat.id, "[Неизвестная команда]")
 
     def handle_message(self, msg: Message):
         tg_user, created = TgUser.objects.get_or_create(
@@ -46,7 +46,7 @@ class Command(BaseCommand):
             },
         )
         if created:
-            self.tg_client.send_message(msg.chat.id, "[greeting]")
+            self.tg_client.send_message(msg.chat.id, f"Приветсвую вас, {msg.from_.username}")
 
         if tg_user.user:
             self.handle_verified_user(msg, tg_user)
