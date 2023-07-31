@@ -34,10 +34,55 @@ class Command(BaseCommand):
             return
         if "/goals" in msg.text:
             self.fetch_tasks(msg, tg_user)
-        if "/create" in msg.text:
-            self.fetch_categories(msg, tg_user)
+        elif "/create" in msg.text:
+            self.handle_create_command(msg, tg_user)
         else:
             self.tg_client.send_message(msg.chat.id, "[Неизвестная команда]")
+
+    def handle_create_command(self, msg: Message, tg_user: TgUser):
+        tg_user.state = self.STATE_WAITING_CATEGORY
+        tg_user.save(update_fields=["state"])
+
+        user_categories = GoalCategory.objects.filter(user=tg_user.user)
+
+        if user_categories.exists():
+            categories_text = "\n".join([category.title for category in user_categories])
+            self.tg_client.send_message(msg.chat.id, "[Выберите категорию:]\n" + categories_text)
+        else:
+            self.tg_client.send_message(msg.chat.id, "[У вас еще нет категорий. Создайте новую категорию.]")
+
+    def handle_category_input(self, msg: Message, tg_user: TgUser):
+        category_input = msg.text.strip()
+
+        existing_categories = GoalCategory.objects.filter(user=tg_user.user, title=category_input)
+
+        if not existing_categories.exists():
+            self.tg_client.send_message(msg.chat.id, "[Несуществующая категория. Попробуйте еще раз.]")
+            return
+
+        tg_user.goal_category = existing_categories.first()
+        tg_user.state = self.STATE_WAITING_GOAL_NAME
+        tg_user.save(update_fields=["goal_category", "state"])
+
+        self.tg_client.send_message(msg.chat.id, "[Введите название новой цели:]")
+
+    def handle_goal_name_input(self, msg: Message, tg_user: TgUser):
+        goal_name = msg.text.strip()
+
+        new_goal = Goal.objects.create(user=tg_user.user, title=goal_name, category=tg_user.goal_category)
+
+        tg_user.state = self.STATE_DEFAULT
+        tg_user.goal_category = None
+        tg_user.save(update_fields=["state", "goal_category"])
+
+        self.tg_client.send_message(msg.chat.id, f"[Цель создана: #{new_goal.id} {new_goal.title}]")
+
+    def handle_cancel_command(self, msg: Message, tg_user: TgUser):
+        tg_user.state = self.STATE_DEFAULT
+        tg_user.goal_category = None
+        tg_user.save(update_fields=["state", "goal_category"])
+
+        self.tg_client.send_message(msg.chat.id, "[Операция отменена пользователем.]")
 
     def handle_message(self, msg: Message):
         tg_user, created = TgUser.objects.get_or_create(
@@ -48,14 +93,25 @@ class Command(BaseCommand):
             },
         )
         if created:
-            self.tg_client.send_message(msg.chat.id, f"[Приветсвую вас, {msg.from_.username}]")
+            self.tg_client.send_message(msg.chat.id, f"[Приветствую вас, {msg.from_.username}]")
 
         if tg_user.user:
-            self.handle_verified_user(msg, tg_user)
+            if tg_user.state == self.STATE_WAITING_CATEGORY:
+                self.handle_category_input(msg, tg_user)
+            elif tg_user.state == self.STATE_WAITING_GOAL_NAME:
+                self.handle_goal_name_input(msg, tg_user)
+            elif "/cancel" in msg.text:
+                self.handle_cancel_command(msg, tg_user)
+            else:
+                self.handle_verified_user(msg, tg_user)
         else:
             self.handle_user_without_verification(msg, tg_user)
 
     def handle(self, *args, **kwargs):
+        self.STATE_DEFAULT = 0
+        self.STATE_WAITING_CATEGORY = 1
+        self.STATE_WAITING_GOAL_NAME = 2
+
         offset = 0
 
         while True:
@@ -63,11 +119,3 @@ class Command(BaseCommand):
             for item in res.result:
                 offset = item.update_id + 1
                 self.handle_message(item.message)
-
-    def fetch_categories(self, msg: Message, tg_user: TgUser):
-        ctgrs = GoalCategory.objects.filter(user=tg_user.user)
-        if ctgrs.count() > 0:
-            resp_msg = [f"#{item.id} {item.title}" for item in ctgrs]
-            self.tg_client.send_message(msg.chat.id, "\n".join(resp_msg))
-        else:
-            self.tg_client.send_message(msg.chat.id, "[У вас еще нет ни одной цели :(]")
