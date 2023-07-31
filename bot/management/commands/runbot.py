@@ -13,6 +13,9 @@ class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.tg_client = TgClient(settings.BOT_TOKEN)
+        self.STATE_DEFAULT = 0
+        self.STATE_WAITING_CATEGORY = 1
+        self.STATE_WAITING_GOAL_NAME = 2
 
     def handle_user_without_verification(self, msg: Message, tg_user: TgUser):
         tg_user.set_verification_code()
@@ -96,12 +99,12 @@ class Command(BaseCommand):
             self.tg_client.send_message(msg.chat.id, f"[Приветствую вас, {msg.from_.username}]")
 
         if tg_user.user:
-            if tg_user.state == self.STATE_WAITING_CATEGORY:
+            if "/cancel" in msg.text:
+                self.handle_cancel_command(msg, tg_user)
+            elif tg_user.state == self.STATE_WAITING_CATEGORY:
                 self.handle_category_input(msg, tg_user)
             elif tg_user.state == self.STATE_WAITING_GOAL_NAME:
                 self.handle_goal_name_input(msg, tg_user)
-            elif "/cancel" in msg.text:
-                self.handle_cancel_command(msg, tg_user)
             else:
                 self.handle_verified_user(msg, tg_user)
         else:
