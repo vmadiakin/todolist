@@ -1,36 +1,35 @@
-# Todolist
+#Todolist
 
-Todolist - это простой планировщик задач, который поможет вам управлять своими заданиями и делами.
+Todolist is a simple task planner that helps you manage your tasks and to-dos.
 
-## Описание
+## Description
 
-Todolist предоставляет удобный интерфейс для создания, редактирования и отслеживания задач. Вы можете создавать задачи, устанавливать им сроки выполнения, добавлять описания и отмечать их как выполненные по мере выполнения. Это поможет вам организовать свою работу, управлять проектами и улучшить продуктивность.
+Todolist provides a user-friendly interface for creating, editing, and tracking tasks. You can create tasks, set due dates for them, add descriptions, and mark them as completed as they are completed. It will help you organize your work, manage projects and improve your productivity.
 
-## Стек
+## Stack
 
-- Python 3.11
+-Python 3.11
 - Django
-- Postgres
+- postgres
 
-## Как запустить
+## How to start
 
-Следуйте этим шагам, чтобы запустить проект:
+Follow these steps to get the project up and running:
 
-1. Установите Poetry, если вы еще не установили его, выполнив следующую команду:
-`pip install poetry`
+1. Install Poetry if you haven't already installed it by running the following command:
+`pip poetry install`
 
-2. Установите зависимости, выполнив следующую команду:
+2. Install the dependencies by running the following command:
 `poetry install`
-Эта команда прочитает файл `pyproject.toml` и установит все зависимости в виртуальное окружение вашего проекта.
-3. Создайте файл `.env` в корневом каталоге проекта и укажите необходимые значения переменных окружения, такие как настройки базы данных, секретный ключ и другие.
+This command will read the `pyproject.toml` file and install all dependencies into your project's virtual environment.
+3. Create a `.env` file in the root directory of the project and specify the necessary values for environment variables, such as database settings, secret key, and others.
 
-4. Примените миграции базы данных, выполнив следующую команду:
+4. Apply the database migrations by running the following command:
 `python manage.py migrate`
 
-5. Запустите проект, используя следующую команду:
+5. Run the project using the following command:
 `python manage.py runserver`
 
-6. Откройте браузер и перейдите по адресу `http://localhost:8000`, чтобы получить доступ к Todolist.
+6. Open a browser and navigate to `http://localhost:8000` to access Todolist.
 
-Убедитесь, что у вас установлен Python 3.11 и Postgres запущен и настроен правильно перед запуском проекта.
-
+Make sure you have Python 3.11 installed and Postgres up and running correctly before running the project.
